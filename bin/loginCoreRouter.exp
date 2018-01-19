@@ -1,0 +1,33 @@
+#!/usr/bin/expect
+# function: the script can auto reload every 2 day.
+# author: allentang
+
+
+set user "queqianme"
+set passwd "gz@qQm168$"
+set enablePasswd "ciscoaiyaya"
+set routeIp "192.168.203.1"
+set cmdEnable "enable"
+set cmdReload "reload"
+set cmdHistory "show history"
+set timeout -1
+
+spawn ssh $user@$routeIp
+
+expect {
+	"(yes/no)?"  	 {send "yes\r"; exp_continue}
+	"Password:"  	 {send "$passwd\r"; exp_continue}
+	"gz20>" 	 {send "\r";}
+}
+
+expect {
+	"gz20>" 	 {send "$cmdEnable\r"; exp_continue}
+	"Password:"  	 {send "$enablePasswd\r"; exp_continue}
+	"gz20#" 	 {send "\r";}
+}
+
+interact {
+
+	-re "quit|EXIT" {send_user "promt closely\n"; return}
+	-time 30000    {send_user "timeout,process will exit"; exit 1}
+}
